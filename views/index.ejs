@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <title>Document</title>
+</head>
+<div class="container p-3">
+    <div class="row">
+        <form action="/api/package/:id" method="GET">
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Package ID" name="id">
+            <button class="btn btn-primary mt-3" type="submit">Submit</button>
+        </form>
+    </div>
+    <div class="row">
+        <form action="/web_tracker">
+            <button type="submit" class="btn btn-primary mt-3 col">Web Tracker</button>
+        </form>
+        <form action="/web_driver">
+            <button type="submit" class="btn btn-primary mt-3 col">Web Driver</button>
+        </form>
+    </div>
+
+    <div class="row">
+        <div class="col-8">
+
+            <div class="row">
+                <% if(packageResult!==0){ %>
+                    <h5>Packages</h5>
+                    <% for (const [key, result] of Object.entries(packageResult)){ %>
+                        <div class="border border-dark rounded p-2 mb-2">
+                            <p>
+                                Description:
+                                <%-result.description %>
+                            </p>
+                            <p>
+                                weight:
+                                <%= result.weight %>
+                                    width:
+                                    <%= result.width %>
+                                        height:
+                                        <%= result.height %>
+                                            depth:
+                                            <%= result.depth %>
+                            </p>
+                            <p>
+                                Sender name:
+                                <%= result.from_name %>
+                            </p>
+                            <p>
+                                Sender adress:
+                                <%= result.from_address %>
+                            </p>
+                            <p>
+                                Sender location:
+                                <%= result.from_location %>
+                            </p>
+                            <p>
+                                Receiver name:
+                                <%= result.to_name %>
+                            </p>
+                            <p>
+                                Receiver Adress:
+                                <%= result.to_address %>
+                            </p>
+                            <p>
+                                Receiver location:
+                                <%=packageResult.to_location  %>
+                            </p>
+                            <form action="/api/package/" method="DELETE">
+                                <button class="btn btn-primary mt-3" value="1" type="submit" name="delete">Delete</button>
+                                <input type="hidden" name="id" value="<%= result.id %> ">
+                            </form>
+                            <form action="/package/update" method="GET">
+                                <button class="btn btn-primary mt-3" value="1" type="submit" name="update">Update</button>
+                                <input type="hidden" name="id" value="<%= result.id %> ">
+                            </form>
+                        </div>
+                        <% }} %>
+            </div>
+            <div class="row">
+                <% if(deliveryResult!==0){ %>
+                    <h5>Deliveries</h5>
+                    <% for (const [key, result] of Object.entries(deliveryResult)){ %>
+                        <div class="border border-dark rounded p-2 mb-2">
+                            <p>
+                                Pick up date:
+                                <%= result.pick_up %>
+                            </p>
+                            <p>
+                                Start time:
+                                <%= result.start_time %>
+                                    End Time:
+                                    <%= result.end_time %>
+                                        Location:
+                                        <%= result.location %>
+                                            Status:
+                                            <%= result.status %>
+                            </p>
+                            <form action="/api/delivery/" method="DELETE">
+                                <button class="btn btn-primary mt-3" value="1" type="submit" name="delete">Delete</button>
+                                <input type="hidden" name="id" value="<%= result.id %> ">
+                            </form>
+                            <form action="/delivery/update" method="GET">
+                                <button value="1" class="btn btn-primary mt-3" type="submit" name="update">Update</button>
+                                <input type="hidden" class="btn btn-primary mt-3" name="id" value="<%= result.id %> ">
+                            </form>
+
+                        </div>
+                        <% }} %>
+            </div>
+
+        </div>
+        <div class="col-4">
+            <form action="/add" method="GET">
+                <div>
+                    <button type="submit" class="btn btn-primary mt-3" name="pack" value="1">Create Package</button>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary mt-3" name="delivery" value="1">Create Delivery</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<body>
+
+</body>
+
+</html>
