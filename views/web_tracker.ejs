@@ -12,19 +12,38 @@
 </head>
 
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Gozem</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/web_tracker">Web Tracker</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/web_driver">Web Driver</a>
+                    </li>
+                </ul>
+                <form class="d-flex">
+                    <button class="btn btn-outline-success" type="submit">Log in</button>
+                </form>
+            </div>
+        </div>
+    </nav>
     <div class="container p-3">
-        <form class="row" method="GET" action="">
-            <div class="col-12">
-                <label for="inputEmail4" class="form-label"></label>
-                <input type="text" name="packageID" placeholder="Enter package ID">
-            </div>
-            <div class="col-12">
-                <button type="input" name="searchPackage">Track</button>
-            </div>
-        </form>
+        <div class="row mb-4">
+            <form action="/api/package/:id" method="GET" class="input-group">
+                <input type="email" class="form-control" name="packageID" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter package ID" name="id">
+                <button class="btn btn-primary mt-3 mt-0" type="submit" name="searchPackage">Track</button>
+            </form>
+        </div>
+
         <div class="row">
             <div class="col">
-                <% if(packageResult){ %>
+                <% if(packageResult!==0){ %>
                     <div class="row">
                         <div class="card" style="width: 18rem;">
                             <div class="card-body">
@@ -78,7 +97,7 @@
                     </div>
 
                     <% } %>
-                        <% if(deliveryResult){ %>
+                        <% if(deliveryResult!==0){ %>
                             <div class="row">
 
                                 <div class="card" style="width: 18rem;">

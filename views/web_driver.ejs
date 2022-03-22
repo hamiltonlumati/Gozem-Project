@@ -12,16 +12,35 @@
 </head>
 
 <body>
-    <div class="container p-3">
-        <form class="row" method="GET" action="">
-            <div class="col-12">
-                <label for="inputEmail4" class="form-label"></label>
-                <input type="text" name="packageID" placeholder="Enter Delivery ID">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Gozem</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/web_tracker">Web Tracker</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/web_driver">Web Driver</a>
+                    </li>
+                </ul>
+                <form class="d-flex">
+                    <button class="btn btn-outline-success" type="submit">Log in</button>
+                </form>
             </div>
-            <div class="col-12">
-                <button type="input" name="searchPackage">Track</button>
-            </div>
-        </form>
+        </div>
+    </nav>
+    <div class="container p-3 m-4">
+        <div class="row mb-4">
+            <form action="/api/package/:id" method="GET" class="input-group">
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Delivery ID" name="id">
+                <button class="btn btn-primary mt-3 mt-0" type="submit">Submit</button>
+            </form>
+        </div>
+
         <div class="row">
             <div class="col">
                 <% if(packageResult!==0){ %>
@@ -76,7 +95,6 @@
                             </div>
                         </div>
                     </div>
-
                     <% } %>
                         <% if(deliveryResult!==0){ %>
                             <div class="row">
@@ -111,55 +129,55 @@
                                 </div>
                                 <% } %>
                             </div>
-                            <div class="col">
-                                <div class="ratio ratio-16x9">
-                                    <div class="mapouter">
-                                        <div class="gmap_canvas"><iframe width="600" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q=2880%20Broadway,%20New%20York&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
-                                                allowfullscreen></iframe>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
             </div>
-        </div>
-        <form class="row">
-            <div class="col-md-6">
-                <label for="inputState" class="form-label">Status</label>
-                <select name="status" id="inputState" class="form-select">
-            <option selected>Open</option>
-            <option>Picked-up</option>
-            <option>in-transit</option>
-            <option>Delivered</option>
-            <option>Failed</option>
-            </select>
+            <div class="col">
+                <div class="ratio ratio-16x9">
+                    <div class="mapouter">
+                        <div class="gmap_canvas"><iframe width="600" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q=2880%20Broadway,%20New%20York&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+        </div>
+        <form class="row input-group m-4">
+            <label for="inputState" class="form-label">Status</label>
+            <select name="status" id="inputState" class="form-select">
+                        <option selected>Open</option>
+                        <option>Picked-up</option>
+                        <option>in-transit</option>
+                        <option>Delivered</option>
+                        <option>Failed</option>
+                        </select>
             <button type="submit" class="btn btn-success">Submit</button>
         </form>
-        <script>
-            const socket = new WebSocket("ws://localhost:3000");
+    </div>
 
-            socket.addEventListener("open", () => {
-                // send a message to the server
-                socket.send(JSON.stringify({
-                    type: "hello from client",
-                    content: [3, "4"]
-                }));
-            });
+    <script>
+        const socket = new WebSocket("ws://localhost:3000");
 
-            // receive a message from the server
-            socket.addEventListener("message", ({
-                data
-            }) => {
-                const packet = JSON.parse(data);
+        socket.addEventListener("open", () => {
+            // send a message to the server
+            socket.send(JSON.stringify({
+                type: "hello from client",
+                content: [3, "4"]
+            }));
+        });
 
-                switch (packet.type) {
-                    case "hello from server":
-                        // ...
-                        break;
-                }
-            });
-        </script>
+        // receive a message from the server
+        socket.addEventListener("message", ({
+            data
+        }) => {
+            const packet = JSON.parse(data);
+
+            switch (packet.type) {
+                case "hello from server":
+                    // ...
+                    break;
+            }
+        });
+    </script>
 </body>
 
 </html>

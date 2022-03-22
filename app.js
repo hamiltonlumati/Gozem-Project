@@ -355,7 +355,10 @@ app.delete('/api/delivery/:id', (req, res) => {
 })
 
 app.get('/web_driver', (req, res) => {
-    res.render('web_driver');
+    res.render('web_driver', {
+        packageResult: 0,
+        deliveryResult: 0
+    });
 })
 
 
@@ -366,7 +369,9 @@ app.get('/web_tracker', (req, res) => {
     });
 })
 
-
+app.get('/login', (req, res) => {
+    res.render('login');
+})
 
 
 //Web-socket

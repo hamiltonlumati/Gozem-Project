@@ -9,127 +9,148 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <title>Document</title>
 </head>
-<div class="container p-3">
-    <div class="row">
-        <form action="/api/package/:id" method="GET">
-            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Package ID" name="id">
-            <button class="btn btn-primary mt-3" type="submit">Submit</button>
-        </form>
-    </div>
-    <div class="row">
-        <form action="/web_tracker">
-            <button type="submit" class="btn btn-primary mt-3 col">Web Tracker</button>
-        </form>
-        <form action="/web_driver">
-            <button type="submit" class="btn btn-primary mt-3 col">Web Driver</button>
-        </form>
-    </div>
-
-    <div class="row">
-        <div class="col-8">
-
-            <div class="row">
-                <% if(packageResult!==0){ %>
-                    <h5>Packages</h5>
-                    <% for (const [key, result] of Object.entries(packageResult)){ %>
-                        <div class="border border-dark rounded p-2 mb-2">
-                            <p>
-                                Description:
-                                <%-result.description %>
-                            </p>
-                            <p>
-                                weight:
-                                <%= result.weight %>
-                                    width:
-                                    <%= result.width %>
-                                        height:
-                                        <%= result.height %>
-                                            depth:
-                                            <%= result.depth %>
-                            </p>
-                            <p>
-                                Sender name:
-                                <%= result.from_name %>
-                            </p>
-                            <p>
-                                Sender adress:
-                                <%= result.from_address %>
-                            </p>
-                            <p>
-                                Sender location:
-                                <%= result.from_location %>
-                            </p>
-                            <p>
-                                Receiver name:
-                                <%= result.to_name %>
-                            </p>
-                            <p>
-                                Receiver Adress:
-                                <%= result.to_address %>
-                            </p>
-                            <p>
-                                Receiver location:
-                                <%=packageResult.to_location  %>
-                            </p>
-                            <form action="/api/package/" method="DELETE">
-                                <button class="btn btn-primary mt-3" value="1" type="submit" name="delete">Delete</button>
-                                <input type="hidden" name="id" value="<%= result.id %> ">
-                            </form>
-                            <form action="/package/update" method="GET">
-                                <button class="btn btn-primary mt-3" value="1" type="submit" name="update">Update</button>
-                                <input type="hidden" name="id" value="<%= result.id %> ">
-                            </form>
-                        </div>
-                        <% }} %>
-            </div>
-            <div class="row">
-                <% if(deliveryResult!==0){ %>
-                    <h5>Deliveries</h5>
-                    <% for (const [key, result] of Object.entries(deliveryResult)){ %>
-                        <div class="border border-dark rounded p-2 mb-2">
-                            <p>
-                                Pick up date:
-                                <%= result.pick_up %>
-                            </p>
-                            <p>
-                                Start time:
-                                <%= result.start_time %>
-                                    End Time:
-                                    <%= result.end_time %>
-                                        Location:
-                                        <%= result.location %>
-                                            Status:
-                                            <%= result.status %>
-                            </p>
-                            <form action="/api/delivery/" method="DELETE">
-                                <button class="btn btn-primary mt-3" value="1" type="submit" name="delete">Delete</button>
-                                <input type="hidden" name="id" value="<%= result.id %> ">
-                            </form>
-                            <form action="/delivery/update" method="GET">
-                                <button value="1" class="btn btn-primary mt-3" type="submit" name="update">Update</button>
-                                <input type="hidden" class="btn btn-primary mt-3" name="id" value="<%= result.id %> ">
-                            </form>
-
-                        </div>
-                        <% }} %>
-            </div>
-
-        </div>
-        <div class="col-4">
-            <form action="/add" method="GET">
-                <div>
-                    <button type="submit" class="btn btn-primary mt-3" name="pack" value="1">Create Package</button>
-                </div>
-                <div>
-                    <button type="submit" class="btn btn-primary mt-3" name="delivery" value="1">Create Delivery</button>
-                </div>
-            </form>
-
-        </div>
-    </div>
-</div>
 
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Gozem</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/web_tracker">Web Tracker</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/web_driver">Web Driver</a>
+                    </li>
+                </ul>
+                <form class="d-flex">
+                    <button class="btn btn-outline-success" type="submit">Log in</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+
+
+    <div class="container p-3">
+        <form action="/add" method="GET" class="mb-4">
+            <ul class="nav nav-pills nav-fill">
+                <li class="nav-item">
+                    <button type="submit" class="nav-link" aria-current="page" name="pack" value="1">Create Package</button>
+                </li>
+                <li class="nav-item">
+                    <button type="submit" class="nav-link" name="delivery" value="1">Create Delivery</button>
+                </li>
+
+            </ul>
+        </form>
+        <div class="row">
+            <form action="/api/package/:id" method="GET" class="input-group">
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Package ID" name="id">
+                <button class="btn btn-primary mt-3 mt-0" type="submit">Submit</button>
+            </form>
+        </div>
+
+        <div class="row">
+            <div class="col-8">
+
+                <div class="row">
+                    <% if(packageResult!==0){ %>
+                        <h5>Packages</h5>
+                        <% for (const [key, result] of Object.entries(packageResult)){ %>
+                            <div class="border border-dark rounded p-2 mb-2">
+                                <p>
+                                    <span class="fw-bold">Description:</span>
+                                    <%-result.description %>
+                                </p>
+                                <p>
+                                    <span class="fw-bold">Weight:</span>
+                                    <%= result.weight %>
+                                        <span class="fw-bold">Width:</span>
+                                        <%= result.width %>
+                                            <span class="fw-bold">Height:</span>
+                                            <%= result.height %>
+                                                <span class="fw-bold">Depth:</span>
+                                                <%= result.depth %>
+                                </p>
+                                <p>
+                                    <span class="fw-bold">Sender name:</span>
+                                    <%= result.from_name %>
+                                </p>
+                                <p>
+                                    <span class="fw-bold">Sender adress:</span>
+                                    <%= result.from_address %>
+                                </p>
+                                <p>
+                                    <span class="fw-bold">Sender location:</span>
+                                    <%= result.from_location %>
+                                </p>
+                                <p>
+                                    <span class="fw-bold">Receiver name:</span>
+                                    <%= result.to_name %>
+                                </p>
+                                <p>
+                                    <span class="fw-bold">Receiver Adress:</span>
+                                    <%= result.to_address %>
+                                </p>
+                                <p>
+                                    <span class="fw-bold">Receiver location:</span>
+                                    <%=packageResult.to_location  %>
+                                </p>
+                                <div class="row">
+                                    <form action="/api/package/" method="DELETE" class="col">
+                                        <button class="btn btn-primary mt-3" value="1" type="submit" name="delete"><i class="bi bi-trash-fill"></i>  Delete</button>
+                                        <input type="hidden" name="id" value="<%= result.id %> ">
+                                    </form>
+                                    <form action="/package/update" method="GET" class="col">
+                                        <button class="btn btn-primary mt-3" value="1" type="submit" name="update"><i class="bi bi-arrow-clockwise"></i>  Update</button>
+                                        <input type="hidden" name="id" value="<%= result.id %> ">
+                                    </form>
+                                </div>
+                            </div>
+                            <% }} %>
+                </div>
+                <div class="row">
+                    <% if(deliveryResult!==0){ %>
+                        <h5>Deliveries</h5>
+                        <% for (const [key, result] of Object.entries(deliveryResult)){ %>
+                            <div class="border border-dark rounded p-2 mb-2">
+                                <p>
+                                    <span class="fw-bold">Pick up date:</span>
+                                    <%= result.pick_up %>
+                                </p>
+                                <p>
+                                    <span class="fw-bold">Start time:</span>
+                                    <%= result.start_time %>
+                                        <span class="fw-bold"> End Time:</span>
+                                        <%= result.end_time %>
+                                            <span class="fw-bold">Location:</span>
+                                            <%= result.location %>
+                                                <span class="fw-bold">Status:</span>
+                                                <%= result.status %>
+                                </p>
+                                <div class="row">
+                                    <form action="/api/delivery/" method="DELETE" class="col">
+                                        <button class="btn btn-primary mt-3" value="1" type="submit" name="delete"><i class="bi bi-trash-fill"></i>  Delete</button>
+                                        <input type="hidden" name="id" value="<%= result.id %> ">
+                                    </form>
+                                    <form action="/delivery/update" method="GET" class="col">
+                                        <button value="1" class="btn btn-primary mt-3" type="submit" name="update"><i class="bi bi-arrow-clockwise"></i>  Update</button>
+                                        <input type="hidden" class="btn btn-primary mt-3" name="id" value="<%= result.id %> ">
+                                    </form>
+                                </div>
+
+                            </div>
+                            <% }} %>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
 
 </body>
 
