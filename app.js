@@ -5,9 +5,9 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-var dotenv = require('dotenv');
 var ws = require('ws');
 var cors = require('cors');
+require('dotenv').config();
 //import { WebSocketServer } from "ws";
 
 /* var indexRouter = require('./routes/index');
@@ -15,8 +15,8 @@ var usersRouter = require('./routes/users');
  */
 var app = express();
 
-const port = 5000
-app.listen(process.env.PORT || port, () => {
+const port = process.env.PORT || 80;
+app.listen(port, () => {
     console.log(`App listening on port ${this.address().port} `);
 })
 
