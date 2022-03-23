@@ -9,6 +9,7 @@ var ws = require('ws');
 var cors = require('cors');
 require('dotenv').config();
 console.log(process.env);
+const http = require('http');
 //import { WebSocketServer } from "ws";
 
 /* var indexRouter = require('./routes/index');
@@ -17,7 +18,7 @@ var usersRouter = require('./routes/users');
 var app = express();
 
 const port = process.env.PORT || 8080;
-app.listen(port, (err) => {
+app.listen(port, '0.0.0.0', (err) => {
     if (err) {
         crossOriginIsolated.log(err);
     } else {
