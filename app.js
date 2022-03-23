@@ -16,8 +16,8 @@ var usersRouter = require('./routes/users');
 var app = express();
 
 const port = 5000
-app.listen(port, () => {
-    console.log(`App listening on port ${port}`)
+app.listen(process.env.PORT || port, () => {
+    console.log(`App listening on port ${this.address().port} `);
 })
 
 
