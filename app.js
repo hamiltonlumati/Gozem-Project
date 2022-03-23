@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 var ws = require('ws');
 var cors = require('cors');
 require('dotenv').config();
+console.log(process.env);
 //import { WebSocketServer } from "ws";
 
 /* var indexRouter = require('./routes/index');
@@ -15,9 +16,13 @@ var usersRouter = require('./routes/users');
  */
 var app = express();
 
-const port = process.env.PORT || 80;
-app.listen(port, () => {
-    console.log(`App listening on port ${this.address().port} `);
+const port = process.env.PORT || 8080;
+app.listen(port, (err) => {
+    if (err) {
+        crossOriginIsolated.log(err);
+    } else {
+        console.log(`App listening on port ${port} `);
+    }
 })
 
 
