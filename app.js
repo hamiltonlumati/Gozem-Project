@@ -27,7 +27,6 @@ mongoose.connect("mongodb+srv://hamiltonlumati:ICUI4CU10h!@cluster0.ovy9d.mongod
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -69,6 +68,7 @@ const packageSchema = new mongoose.Schema({
     to_address: String,
     to_location: Object
 })
+
 const deliverySchema = new mongoose.Schema({
     package_id: String,
     pick_up: Date,
@@ -78,10 +78,14 @@ const deliverySchema = new mongoose.Schema({
     status: String
 })
 
+const userSchema = new mongoose.Schema({
+    email: String,
+    password: String
+})
+
+const User = mongoose.model('User', userSchema);
 const Package = mongoose.model('Package', packageSchema);
 const Delivery = mongoose.model('Delivery', deliverySchema);
-
-
 
 app.get('/', (req, res) => {
     Package.find({}, (err, packageResult) => {
