@@ -158,7 +158,7 @@ module.exports = function(app) {
                 } else {
                     myDataB.insertOne({
                             username: req.body.username,
-
+							surname: req.body.surname,
                             password: hash
                         },
                         (err, doc) => {
