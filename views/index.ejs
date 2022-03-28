@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
-    <title>Document</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <title>Gozem - Dashboard</title>
 </head>
 
 <body>
@@ -18,7 +19,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav me-auAddressee mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/web_tracker">Web Tracker</a>
                     </li>
@@ -26,16 +27,27 @@
                         <a class="nav-link active" aria-current="page" href="/web_driver">Web Driver</a>
                     </li>
                 </ul>
-                <form class="d-flex">
-                    <button class="btn btn-outline-success" type="submit">Log in</button>
-                </form>
             </div>
         </div>
+        <form class="lateral" action="/" method="GET">
+            <input class="lat" type="number" name="code" placeholder="Introduce items code">
+            <select class="lat" name="item">
+                <option value="3" selected>Package</option>
+                <option value="4">Delivery</option>
+            </select>
+            <button class="lat" type="submit" name="submit">Search</button>
+        </form>
+        <span class="lateral"><a href="/login">Log Out</a></span>
     </nav>
 
 
 
     <div class="container p-3">
+        <form action="/" method="GET">
+            <button type="submit" value="1" name="item">Packages</button>
+            <button type="submit" value="2" name="item">Delivery</button>
+        </form>
+
         <form action="/add" method="GET" class="mb-4">
             <ul class="nav nav-pills nav-fill">
                 <li class="nav-item">
@@ -47,111 +59,150 @@
 
             </ul>
         </form>
-        <div class="row">
-            <form action="/api/package/:id" method="GET" class="input-group">
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Package ID" name="id">
-                <button class="btn btn-primary mt-3 mt-0" type="submit">Submit</button>
-            </form>
-        </div>
 
         <div class="row">
-            <div class="col-8">
 
-                <div class="row">
-                    <% if(packageResult!==0){ %>
-                        <h5>Packages</h5>
-                        <% for (const [key, result] of Object.entries(packageResult)){ %>
-                            <div class="border border-dark rounded p-2 mb-2">
-                                <p>
-                                    <span class="fw-bold">Description:</span>
-                                    <%-result.description %>
-                                </p>
-                                <p>
-                                    <span class="fw-bold">Weight:</span>
-                                    <%= result.weight %>
-                                        <span class="fw-bold">Width:</span>
-                                        <%= result.width %>
-                                            <span class="fw-bold">Height:</span>
-                                            <%= result.height %>
-                                                <span class="fw-bold">Depth:</span>
-                                                <%= result.depth %>
-                                </p>
-                                <p>
-                                    <span class="fw-bold">Sender name:</span>
-                                    <%= result.from_name %>
-                                </p>
-                                <p>
-                                    <span class="fw-bold">Sender adress:</span>
-                                    <%= result.from_address %>
-                                </p>
-                                <p>
-                                    <span class="fw-bold">Sender location:</span>
-                                    <%= result.from_location %>
-                                </p>
-                                <p>
-                                    <span class="fw-bold">Receiver name:</span>
-                                    <%= result.to_name %>
-                                </p>
-                                <p>
-                                    <span class="fw-bold">Receiver Adress:</span>
-                                    <%= result.to_address %>
-                                </p>
-                                <p>
-                                    <span class="fw-bold">Receiver location:</span>
-                                    <%=packageResult.to_location  %>
-                                </p>
-                                <div class="row">
-                                    <form action="/api/package/" method="DELETE" class="col">
-                                        <button class="btn btn-primary mt-3" value="1" type="submit" name="delete"><i class="bi bi-trash-fill"></i>  Delete</button>
-                                        <input type="hidden" name="id" value="<%= result.id %> ">
-                                    </form>
-                                    <form action="/package/update" method="GET" class="col">
-                                        <button class="btn btn-primary mt-3" value="1" type="submit" name="update"><i class="bi bi-arrow-clockwise"></i>  Update</button>
-                                        <input type="hidden" name="id" value="<%= result.id %> ">
-                                    </form>
-                                </div>
-                            </div>
-                            <% }} %>
-                </div>
-                <div class="row">
-                    <% if(deliveryResult!==0){ %>
-                        <h5>Deliveries</h5>
-                        <% for (const [key, result] of Object.entries(deliveryResult)){ %>
-                            <div class="border border-dark rounded p-2 mb-2">
-                                <p>
-                                    <span class="fw-bold">Pick up date:</span>
-                                    <%= result.pick_up %>
-                                </p>
-                                <p>
-                                    <span class="fw-bold">Start time:</span>
-                                    <%= result.start_time %>
-                                        <span class="fw-bold"> End Time:</span>
-                                        <%= result.end_time %>
-                                            <span class="fw-bold">Location:</span>
-                                            <%= result.location %>
-                                                <span class="fw-bold">Status:</span>
-                                                <%= result.status %>
-                                </p>
-                                <div class="row">
+            <% if(item==1||item==3){ %>
+                <h5>Packages</h5>
+                <table>
+                    <tr>
+                        <th>Package Code</th>
+                        <th>Description</th>
+                        <th>Package</th>
+                        <th>Sender</th>
+                        <th>Addressee</th>
+                        <th>Operations</th>
+
+                    </tr>
+                    <% for (const [key, result] of Object.entries(result1)){ %>
+                        <tr>
+                            <td>
+                                <%= result.package_code %>
+                            </td>
+                            <td>
+                                <%-result.description %>
+                            </td>
+                            <td>
+                                <select>
+                                            <option selected>Package</option>
+                                            <option value="">Weight: <%= result.weight %> </option>
+                                            <option value="">Width: <%= result.width %> </option>
+                                            <option value="">Height: <%= result.height %> </option>
+                                            <option value="">Depth: <%= result.depth %> </option>
+                                        </select>
+                            </td>
+                            <td>
+                                <select>
+                                            <option selected>Sender</option>
+                                            <option value="">Name: <%= result.from_name %> </option>
+                                            <option value="">Adreess: <%- result.from_address %> </option>
+                                            <option value="">Location: <%= result.from_location %> </option>
+                                        </select>
+                            </td>
+                            <td>
+                                <select>
+                                            <option>Addressee</option>
+                                            <option value="">Name: <%= result.to_name %> </option>
+                                            <option value="">Adreess: <%- result.to_address %> </option>
+                                            <option value="">Location: <%= result.to_location %> </option>
+    
+                                        </select>
+                            </td>
+                            <td>
+                                <form action="/api/package/" method="DELETE" class="col">
+                                    <button class="btn btn-primary" value="1" type="submit" name="delete"><i class="bi bi-trash-fill"></i></button>
+                                    <input type="hidden" name="id" value="<%= result._id %> ">
+                                </form>
+                            </td>
+                            <td>
+                                <form action="/package/update" method="GET" class="col">
+                                    <button value="1" class="btn btn-primary" type="submit" name="update"><i class="bi bi-arrow-clockwise"></i></button>
+                                    <input type="hidden" name="id" value="<%= result._id %> ">
+                                </form>
+                            </td>
+                        </tr>
+
+
+                        <% }} %>
+                </table>
+
+
+                <% if(item==2||item==4){ %>
+                    <h5>Deliveries</h5>
+
+                    <table>
+                        <tr>
+                            <th>Package Code</th>
+                            <th>Times</th>
+                            <th>Status</th>
+                            <th>Location</th>
+                            <th>Operations</th>
+                        </tr>
+
+
+                        <% for (const [key, result] of Object.entries(result1)){ %>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <select name="" id="">
+                                        <option value="">Pick Up: <%= result.pick_up %> </option>
+                                        <option value="start_time">Start Time: <%= result.start_time %> </option>
+                                        <option value="">End Time: <%= result.end_time %> </option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <%= result.status %>
+                                </td>
+                                <td>
+                                    <%= result.location %>
+                                </td>
+                                <td>
                                     <form action="/api/delivery/" method="DELETE" class="col">
-                                        <button class="btn btn-primary mt-3" value="1" type="submit" name="delete"><i class="bi bi-trash-fill"></i>  Delete</button>
+                                        <button class="btn btn-primary" value="1" type="submit" name="delete"><i class="bi bi-trash-fill"></i></button>
                                         <input type="hidden" name="id" value="<%= result.id %> ">
                                     </form>
+                                </td>
+                                <td>
                                     <form action="/delivery/update" method="GET" class="col">
-                                        <button value="1" class="btn btn-primary mt-3" type="submit" name="update"><i class="bi bi-arrow-clockwise"></i>  Update</button>
-                                        <input type="hidden" class="btn btn-primary mt-3" name="id" value="<%= result.id %> ">
+                                        <button value="1" class="btn btn-primary" type="submit" name="update"><i class="bi bi-arrow-clockwise"></i></button>
+                                        <input type="hidden" name="id" value="<%= result.id %> ">
                                     </form>
-                                </div>
+                                </td>
+                            </tr>
 
-                            </div>
+
                             <% }} %>
-                </div>
+                    </table>
 
-            </div>
 
         </div>
     </div>
+    <script>
+        function onSignIn(googleUser) {
+            var id_token = googleUser.getAuthResponse().id_token;
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/login');
+            xhr.setRequesther('Content-Type', 'application/json');
+            xhr.onload = function() {
+                console.log('Signed in as: ' + xhr.responseText);
+                if (xhr.responseText == 'success') {
+                    signOut();
+                    location.assign('/');
+                }
+            };
+            xhr.send(JSON.stringify({
+                token: id_token
+            }));
+        }
 
+        function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function() {
+                console.log('User signed out.');
+            });
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </body>
 
 </html>

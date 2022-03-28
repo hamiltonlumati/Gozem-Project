@@ -10,12 +10,49 @@
 </head>
 
 <body>
+
     <div>
         <h1>Gozem - Login</h1>
-        <script src="https://apis.google.com/js/platform.js" async defer></script>
+
     </div>
-    <div class="g-signin2" data-onsuccess="onSignIn"></div>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <% if(status==1) {%>
+        <p>Account created successfully. Please, sign in.
+        </p>
+        <% } %>
+
+            <div>
+                <form action="register" method="get">
+                    <button type="submit">Register</button>
+                </form>
+            </div>
+            <div class="g-signin2" data-onsuccess="onSignIn"></div>
+            <a href="/login" onclick="signOut();">Sign out</a>
+            <script src="https://apis.google.com/js/platform.js" async defer></script>
+            <script>
+                function onSignIn(googleUser) {
+                    var id_token = googleUser.getAuthResponse().id_token;
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/login');
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                    xhr.onload = function() {
+                        console.log('Signed in as: ' + xhr.responseText);
+                        if (xhr.responseText) {
+                            signOut();
+                            location.assign(xhr.responseText);
+                        }
+                    };
+                    xhr.send(JSON.stringify({
+                        token: id_token
+                    }));
+                }
+
+                function signOut() {
+                    var auth2 = gapi.auth2.getAuthInstance();
+                    auth2.signOut().then(function() {
+                        console.log('User signed out.');
+                    });
+                }
+            </script>
 </body>
 
 </html>

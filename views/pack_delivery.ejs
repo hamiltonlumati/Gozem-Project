@@ -16,9 +16,9 @@
             <a class="navbar-brand" href="/">Gozem</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
-          </button>
+        </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav me-auAddressee mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/web_tracker">Web Tracker</a>
                     </li>
@@ -26,9 +26,6 @@
                         <a class="nav-link active" aria-current="page" href="/web_driver">Web Driver</a>
                     </li>
                 </ul>
-                <form class="d-flex">
-                    <button class="btn btn-outline-success" type="submit">Log in</button>
-                </form>
             </div>
         </div>
     </nav>
@@ -37,47 +34,47 @@
             <form class="row g-3" method="POST" action="/api/package/">
                 <div class="col-md-6">
                     <label for="inputEmail4" class="form-label">Description</label>
-                    <input type="text" name="description" class="form-control" id="inputEmail4">
+                    <input type="text" name="description" class="form-control" id="inputEmail4" required>
                 </div>
                 <div class="col-md-6">
-                    <label for="inputPassword4" class="form-label">From Name</label>
-                    <input type="text" name="from_name" class="form-control" id="inputPassword4">
+                    <label for="inputPassword4" class="form-label">Sender Name</label>
+                    <input type="text" name="from_name" class="form-control" id="inputPassword4" required>
                 </div>
                 <div class="col-md-6">
-                    <label for="inputAddress" class="form-label">From Address</label>
-                    <input type="text" name="from_address" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                    <label for="inputAddress" class="form-label">Sender Address</label>
+                    <input type="text" name="from_address" class="form-control" id="inputAddress" placeholder="1234 Main St" required>
                 </div>
                 <div class="col-md-6">
-                    <label for="inputAddress" class="form-label">From location</label>
-                    <input type="text" name="from_location" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                    <label for="inputAddress" class="form-label">Sender location</label>
+                    <input type="text" name="from_location" class="form-control" id="inputAddress" placeholder="1234 Main St" required>
                 </div>
                 <div class="col-md-6">
-                    <label for="inputPassword4" class="form-label">to Name</label>
-                    <input type="text" name="to_name" class="form-control" id="inputPassword4">
+                    <label for="inputPassword4" class="form-label">Addressee Name</label>
+                    <input type="text" name="to_name" class="form-control" id="inputPassword4" required>
                 </div>
                 <div class="col-md-6">
-                    <label for="inputAddress" class="form-label">to Address</label>
-                    <input type="text" name="to_address" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                    <label for="inputAddress" class="form-label">Addressee Address</label>
+                    <input type="text" name="to_address" class="form-control" id="inputAddress" placeholder="1234 Main St" required>
                 </div>
                 <div class="col-md-6">
-                    <label for="inputAddress" class="form-label">to location</label>
-                    <input type="text" name="to_location" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                    <label for="inputAddress" class="form-label">Addressee location</label>
+                    <input type="text" name="to_location" class="form-control" id="inputAddress" placeholder="1234 Main St" required>
                 </div>
                 <div class="col-md-6">
                     <label for="inputPassword4" class="form-label">depth</label>
-                    <input type="number" name="depth" class="form-control" id="inputPassword4">
+                    <input type="number" name="depth" class="form-control" id="inputPassword4" required>
                 </div>
                 <div class="col-md-6">
                     <label for="inputAddress" class="form-label">Weight</label>
-                    <input type="number" name="weight" class="form-control" id="inputAddress" placeholder="10">
+                    <input type="number" name="weight" class="form-control" id="inputAddress" placeholder="10" required>
                 </div>
                 <div class="col-md-6">
                     <label for="inputPassword4" class="form-label">Width</label>
-                    <input type="number" name="width" class="form-control" id="inputPassword4">
+                    <input type="number" name="width" class="form-control" id="inputPassword4" required>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6"> required
                     <label for="inputAddress" class="form-label">Height</label>
-                    <input type="number" name="height" class="form-control" id="inputAddress" placeholder="10">
+                    <input type="number" name="height" class="form-control" id="inputAddress" placeholder="10" required>
                 </div>
                 <div class="col-12">
                     <button type="submit" name="savePack" class="btn btn-primary" value="1">Save Package</button>
@@ -85,30 +82,30 @@
             </form>
             <% } %>
                 <% if(delivery){ %>
-                    <form class="row g-3" method="POST" action="/api/delivery/:id">
+                    <form class="row g-3" method="POST" action="/api/delivery/:id" required>
                         <div class="col-12">
                             <label for="inputAddress" class="form-label">Package ID</label>
-                            <input type="text" name="package_id" class="form-control" id="inputAddress" placeholder="Package ID">
+                            <input type="text" name="package_id" class="form-control" id="inputAddress" placeholder="Package ID" required>
                         </div>
                         <div class="col-md-6">
                             <label for="inputEmail4" class="form-label">Pick up date</label>
-                            <input type="date" name="pick_up" class="form-control" id="inputEmail4">
+                            <input type="date" name="pick_up" class="form-control" id="inputEmail4" required>
                         </div>
                         <div class="col-md-6">
                             <label for="inputPassword4" class="form-label">Start Time</label>
-                            <input type="date" name="start_time" class="form-control" id="inputPassword4">
+                            <input type="date" name="start_time" class="form-control" id="inputPassword4" required>
                         </div>
                         <div class="col-md-6">
                             <label for="inputAddress" class="form-label">End Time</label>
-                            <input type="date" name="end_time" class="form-control" id="inputAddress">
+                            <input type="date" name="end_time" class="form-control" id="inputAddress" required>
                         </div>
                         <div class="col-md-6">
                             <label for="inputAddress2" class="form-label">Location</label>
-                            <input type="text" name="location" class="form-control" id="inputAddress2">
+                            <input type="text" name="location" class="form-control" id="inputAddress2" required>
                         </div>
                         <div class="col-md-6">
                             <label for="inputState" class="form-label">Status</label>
-                            <select name="status" id="inputState" class="form-select">
+                            <select name="status" id="inputState" class="form-select" required>
                             <option selected>Open</option>
                             <option>Picked-up</option>
                             <option>in-transit</option>
@@ -120,7 +117,31 @@
                     </form>
                     <% } %>
     </div>
+    <script>
+        function onSignIn(googleUser) {
+            var id_token = googleUser.getAuthResponse().id_token;
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/login');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onload = function() {
+                console.log('Signed in as: ' + xhr.responseText);
+                if (xhr.responseText == 'success') {
+                    signOut();
+                    location.assign('/');
+                }
+            };
+            xhr.send(JSON.stringify({
+                token: id_token
+            }));
+        }
 
+        function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function() {
+                console.log('User signed out.');
+            });
+        }
+    </script>
 </body>
 
 </html>

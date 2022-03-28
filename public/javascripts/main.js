@@ -33,7 +33,7 @@ var vectorSource = new ol.source.Vector({
 var markerVectorLayer = new ol.layer.Vector({
     source: vectorSource,
 });
-// add style to Vector layer style map
+// add style Addressee Vector layer style map
 map.addLayer(markerVectorLayer);
 
 

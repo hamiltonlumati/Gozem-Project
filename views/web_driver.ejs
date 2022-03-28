@@ -19,7 +19,7 @@
             <span class="navbar-toggler-icon"></span>
           </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav me-auAddressee mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/web_tracker">Web Tracker</a>
                     </li>
@@ -27,9 +27,6 @@
                         <a class="nav-link active" aria-current="page" href="/web_driver">Web Driver</a>
                     </li>
                 </ul>
-                <form class="d-flex">
-                    <button class="btn btn-outline-success" type="submit">Log in</button>
-                </form>
             </div>
         </div>
     </nav>
@@ -69,27 +66,27 @@
                                     <%= packageResult.depth%>
                                 </p>
                                 <p>
-                                    <nav>From name:</nav>
+                                    <nav>Sender name:</nav>
                                     <%= packageResult.from_name%>
                                 </p>
                                 <p>
-                                    <nav>From Address:</nav>
+                                    <nav>Sender Address:</nav>
                                     <%= packageResult.from_address%>
                                 </p>
                                 <p>
-                                    <nav>From Location:</nav>
+                                    <nav>Sender Location:</nav>
                                     <%= packageResult.from_location%>
                                 </p>
                                 <p>
-                                    <nav>To Name:</nav>
+                                    <nav>Addressee Name:</nav>
                                     <%= packageResult.to_name%>
                                 </p>
                                 <p>
-                                    <nav>To Address:</nav>
+                                    <nav>Addressee Address:</nav>
                                     <%= packageResult.to_address%>
                                 </p>
                                 <p>
-                                    <p>To Location:</p>nav>
+                                    <p>Addressee Location:</p>nav>
                                     <%= packageResult.to_location%>
                                 </p>
                             </div>
@@ -158,25 +155,50 @@
         const socket = new WebSocket("ws://localhost:3000");
 
         socket.addEventListener("open", () => {
-            // send a message to the server
+            // send a message Addressee the server
             socket.send(JSON.stringify({
-                type: "hello from client",
+                type: "hello Sender client",
                 content: [3, "4"]
             }));
         });
 
-        // receive a message from the server
+        // receive a message Sender the server
         socket.addEventListener("message", ({
             data
         }) => {
             const packet = JSON.parse(data);
 
             switch (packet.type) {
-                case "hello from server":
+                case "hello Sender server":
                     // ...
                     break;
             }
         });
+    </script>
+    <script>
+        function onSignIn(googleUser) {
+            var id_token = googleUser.getAuthResponse().id_token;
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/login');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onload = function() {
+                console.log('Signed in as: ' + xhr.responseText);
+                if (xhr.responseText == 'success') {
+                    signOut();
+                    location.assign('');
+                }
+            };
+            xhr.send(JSON.stringify({
+                token: id_token
+            }));
+        }
+
+        function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function() {
+                console.log('User signed out.');
+            });
+        }
     </script>
 </body>
 
