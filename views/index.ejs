@@ -30,7 +30,7 @@
             </div>
         </div>
         <form class="lateral" action="/" method="GET">
-            <input class="lat" type="number" name="code" placeholder="Introduce items code">
+            <input class="lat" type="text" name="itemname" placeholder="Introduce items code">
             <select class="lat" name="item">
                 <option value="3" selected>Package</option>
                 <option value="4">Delivery</option>
@@ -40,12 +40,13 @@
         <span class="lateral"><a href="/login">Log Out</a></span>
     </nav>
 
-
-
     <div class="container p-3">
-        <form action="/" method="GET">
+        <form action="/dashboard" method="GET">
             <button type="submit" value="1" name="item">Packages</button>
             <button type="submit" value="2" name="item">Delivery</button>
+            <button type="submit" value="5" name="item">Users</button>
+            <button type="submit" value="6" name="item">Reports</button>
+
         </form>
 
         <form action="/add" method="GET" class="mb-4">
@@ -173,7 +174,6 @@
 
                             <% }} %>
                     </table>
-
 
         </div>
     </div>

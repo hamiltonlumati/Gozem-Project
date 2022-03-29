@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <title>Gozem Map</title>
+</head>
+
+<body>
+    <% if(account_type==2) {%>
+        <% for (const [key, result] of Object.entries(result1)){ %>
+
+            <div>
+                <table>
+                    <tr>
+                        <th>Package Code</th>
+                        <th>Description</th>
+                        <th>Package</th>
+                        <th>Sender</th>
+                        <th>Addressee</th>
+                        <th>Operations</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <%= result.package_code %>
+                        </td>
+                        <td>
+                            <%-result.description %>
+                        </td>
+                        <td>
+                            <select>
+                                        <option selected>Package</option>
+                                        <option value="">Weight: <%= result.weight %> </option>
+                                        <option value="">Width: <%= result.width %> </option>
+                                        <option value="">Height: <%= result.height %> </option>
+                                        <option value="">Depth: <%= result.depth %> </option>
+                                    </select>
+                        </td>
+                        <td>
+                            <select>
+                                        <option selected>Sender</option>
+                                        <option value="">Name: <%= result.from_name %> </option>
+                                        <option value="">Adreess: <%- result.from_address %> </option>
+                                        <option value="">Location: <%= result.from_location %> </option>
+                                    </select>
+                        </td>
+                        <td>
+                            <select>
+                                        <option>Addressee</option>
+                                        <option value="">Name: <%= result.to_name %> </option>
+                                        <option value="">Adreess: <%- result.to_address %> </option>
+                                        <option value="">Location: <%= result.to_location %> </option>
+
+                                    </select>
+                        </td>
+                        <td>
+                            <form action="/api/package/" method="DELETE" class="col">
+                                <button class="btn btn-primary" value="1" type="submit" name="delete"><i class="bi bi-trash-fill"></i></button>
+                                <input type="hidden" name="id" value="<%= result._id %> ">
+                            </form>
+                        </td>
+                        <td>
+                            <form action="/package/update" method="GET" class="col">
+                                <button value="1" class="btn btn-primary" type="submit" name="update"><i class="bi bi-arrow-clockwise"></i></button>
+                                <input type="hidden" name="id" value="<%= result._id %> ">
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+            <% } %>
+                <div class="">
+                    <div class="ratio ratio-16x9">
+                        <div class="mapouter">
+                            <div class="gmap_canvas"><iframe width="600" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q=2880%20Broadway,%20New%20York&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <% } %>
+                    <% if(account_type==3) {%>
+                        <% for (const [key, result] of Object.entries(result1)){ %>
+                            <div>
+                                <table>
+                                    <tr>
+                                        <th>Package Code</th>
+                                        <th>Times</th>
+                                        <th>Status</th>
+                                        <th>Location</th>
+                                        <th>Operations</th>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            <select name="" id="">
+                                            <option value="">Pick Up: <%= result.pick_up %> </option>
+                                            <option value="start_time">Start Time: <%= result.start_time %> </option>
+                                            <option value="">End Time: <%= result.end_time %> </option>
+                                        </select>
+                                        </td>
+                                        <td>
+                                            <%= result.status %>
+                                        </td>
+                                        <td>
+                                            <%= result.location %>
+                                        </td>
+                                        <td>
+                                            <form action="/api/delivery/" method="DELETE" class="col">
+                                                <button class="btn btn-primary" value="1" type="submit" name="delete"><i class="bi bi-trash-fill"></i></button>
+                                                <input type="hidden" name="id" value="<%= result.id %> ">
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form action="/delivery/update" method="GET" class="col">
+                                                <button value="1" class="btn btn-primary" type="submit" name="update"><i class="bi bi-arrow-clockwise"></i></button>
+                                                <input type="hidden" name="id" value="<%= result.id %> ">
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+
+                            <% } %>
+                                <div class="">
+                                    <div class="ratio ratio-16x9">
+                                        <div class="mapouter">
+                                            <div class="gmap_canvas"><iframe width="600" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q=2880%20Broadway,%20New%20York&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+                                                    allowfullscreen></iframe>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% } %>
+                                    script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js', integrity='sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=', crossorigin='anonymous')
+                                    <script src='/socket.io/socket.io.js'></script>
+                                    script(async, defer, src='/javascripts/client.js')
+</body>
+
+</html>
