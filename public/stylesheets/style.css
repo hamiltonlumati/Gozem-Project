@@ -1,3 +1,59 @@
+/* LOGIN */
+
+body {
+    padding: 0px;
+}
+
+body .login-left {
+    width: 30%;
+    height: 100%;
+    overflow: hidden;
+    float: left;
+}
+
+body .login-left img {
+    width: 100%;
+    height: 100%;
+}
+
+body .login-right {
+    position: relative;
+    width: 70%;
+    display: inline-block;
+    height: 710px;
+    background-image: url("/images/Simple\ Shiny.svg");
+}
+
+body .login-right .title {
+    margin-left: 10px;
+}
+
+body .login-right .group {
+    background-color: #a77e58;
+    width: 50%;
+    padding: 10px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+body .login-right .group .row div,
+body .login-right .group .row button {
+    margin-top: 8px;
+}
+
+body .login-right .group .row label {
+    display: inline-block;
+    width: 100px;
+}
+
+body .login-right .group .row {
+    margin-top: 30px;
+    padding-left: 20px;
+}
+
+
+/* ADMIN DASHBOARD */
+
 .lateral,
 .lat {
     display: inline;

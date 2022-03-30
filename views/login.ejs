@@ -8,65 +8,101 @@
     <meta name="google-signin-client_id" content="63293722215-rpoaqktpbi8j9f2ctoqrkp22q3mqqlko.apps.googleusercontent.com">
     <link rel="stylesheet" href="/stylesheets/style.css">
 
-    <title>Document</title>
+    <title>Gozem - Login</title>
 </head>
 
 <body>
-
-    <div>
-        <h1>Gozem - Login</h1>
-
+    <div class="login-left">
+        <img src="/images/pexels-kindel-media-6868274.jpg" alt="">
     </div>
-    <form action="/login">
-        <p>Login</p>
-        <label for="#email">Email</label>
-        <input type="email" placeholder="Introduce your email" required>
-        <label for="#password">Password*</label>
-        <input type="password" name="password" id="" required>
-    </form>
-    <div>
-        <div id="require">
-            <% if(typeof error !== 'undefined'){ %>
-                Please, fill all the required fields.
-                <% } %>
+    <div class="login-right">
+        <div class="title">
+            <h1>Gozem - Login</h1>
+            <h2>Whatever, Wherever... We</h2>
         </div>
+        <div class="group">
 
-        <form action="/register" method="Post">
-            <input type="hidden" name="location" id="location">
-            <div>
-                <label for="#email">Email</label>
-                <input type="email" name="email" id="email" placeholder="Introduce your email*" required></div>
-            <div><label for="#name">First Name</label>
-                <input type="text" name="name" id="name" placeholder="Introduce your first name*"></div>
-            <div><label for="#surname">Surname</label>
-                <input type="text" name="surname" name="surname" id="surname" placeholder="Introduce your surname*" required></div>
-            <div><label for="username">Username</label>
-                <input type="text" name="username" id="username">
-                <p id="userst"></p>
+            <div class="row">
+                <form action="/login" method="POST">
+                    <p>Login</p>
+                    <div>
+                        <label for="#email">Email*</label>
+                        <input id="email" type="email" placeholder="Introduce your email" name="username" required>
+                    </div>
+                    <div>
+                        <label for="#password">Password*</label>
+                        <input type="password" id="current-password" name="password" required>
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
             </div>
-            <div>
-                <label for="address">Address</label>
-                <input type="text" name="address" id="address" placeholder="Introduce your Adress">
-            </div>
-            <div><label for="#password">Password*</label>
-                <input type="password" id="password" required></div>
-            <div><label for="#passwordConfirm">Confirm Password*</label>
-                <input type="password" id="passwordConfirm" required>
-                <p id="pass"></p>
-            </div>
-            <div>
-                <label for="#account_type">Account Type</label>
-                <select name="account_type" id="account_type" required>
+            <div class="row">
+                <div id="require">
+                    <% if(typeof error !== 'undefined'){ %>
+                        <% } %>
+                </div>
+
+                <form action="/register" method="POST">
+                    <input type="hidden" name="location" id="location">
+                    <div>
+                        <label for="#email">Email</label>
+                        <input type="email" name="email" id="emailR" placeholder="Introduce your email*" required></div>
+                    <div><label for="#name">First Name</label>
+                        <input type="text" name="name" id="name" placeholder="Introduce your first name*"></div>
+                    <div><label for="#surname">Surname</label>
+                        <input type="text" name="surname" name="surname" id="surname" placeholder="Introduce your surname*" required></div>
+                    <div><label for="username">Username</label>
+                        <input type="text" name="username" id="username">
+                        <p id="userst"></p>
+                    </div>
+                    <div>
+                        <label for="address">Address</label>
+                        <input type="text" name="address" id="address" placeholder="Introduce your Adress">
+                    </div>
+                    <div><label for="#password">Password*</label>
+                        <input type="password" name="password" id="passwordR" required></div>
+                    <div><label for="#passwordConfirm">Confirm Password*</label>
+                        <input type="password" id="passwordConfirm" required>
+                        <p id="pass"></p>
+                    </div>
+                    <div>
+                        <label for="#account_type">Account Type</label>
+                        <select name="account_type" id="account_type" required>
                             <option value="1" >Admin</option>
                             <option value="2">Driver</option>
                             <option value="3" selected>Client</option>
                         </select>
+                    </div>
+                    <input type="hidden" name="fill" value="no" id="fill">
+                    <input type="hidden" name="equal" value="no" id="equal">
+                    <button id="register" type="submit" disabled>Register</button>
+                </form>
             </div>
-            <input type="hidden" name="check" value="">
-            <input type="hidden" name="equal" value="no">
-            <button id="register" type="submit" disabled>Register</button>
-        </form>
+        </div>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- JAVASCRIPT -->
+
+
+
     <script src="/socket.io/socket.io.js"></script>
     <script>
         var socket = io();
@@ -86,75 +122,94 @@
         }
 
         socket.on('username-response', function(data) {
-            console.log(data);
-            if (data.status == 1) {
-                document.getElementById('userst').innerHTML = `${data.username} is already in use`;
-            } else {
-                document.getElementById('userst').innerHTML = `Your username is ${data.username}`;
-            }
-
+                console.log(data);
+                if (data.status == 1) {
+                    document.getElementById('userst').innerHTML = `${data.username} is already in use`;
+                } else {
+                    document.getElementById('userst').innerHTML = `Your username is ${data.username}`;
+                }
+            })
             //input validation
-            document.getElementById('name').addEventListener('input', () => {
-                emptyChecker()
-            })
-            document.getElementById('surname').addEventListener('input', () => {
-                emptyChecker()
-            })
-            document.getElementById('email').addEventListener('input', () => {
-                emptyChecker()
-            })
-            document.getElementById('username').addEventListener('input', () => {
-                emptyChecker()
-            })
-            document.getElementById('password').addEventListener('input', () => {
-                emptyChecker()
-            })
-            document.getElementById('passwordConfirm').addEventListener('input', () => {
-                emptyChecker()
-            })
+        document.getElementById('name').addEventListener('input', () => {
+            emptyChecker()
+        })
+        document.getElementById('surname').addEventListener('input', () => {
+            emptyChecker()
+        })
+        document.getElementById('emailR').addEventListener('input', () => {
+            emptyChecker()
+        })
+        document.getElementById('username').addEventListener('input', () => {
+            emptyChecker()
+        })
+        document.getElementById('passwordR').addEventListener('input', () => {
+            emptyChecker()
+        })
+        document.getElementById('passwordConfirm').addEventListener('input', () => {
+            emptyChecker()
+        })
 
-            //password
-            document.getElementById('passwordConfirm').addEventListener('input', function() {
+        //password
+        document.getElementById('passwordConfirm').addEventListener('input', function() {
                 passwordVerification();
             })
-
-            function passwordVerification() {
-                var password = document.getElementById('password').value;
-                console.log(password);
-                var verpassword = document.getElementById('passwordConfirm').value;
-                console.log(verpassword);
-                if (password != verpassword) {
-                    document.getElementById('pass').innerHTML = `Different Password Introduced`;
-                    document.getElementById('equal').value = 'no';
-                } else {
-                    document.getElementById('equal').value = 'yes';
-                }
-            }
-
-            function emptyChecker() {
-                var name = document.getElementById('name').value;
-                var surname = document.getElementById('surname').value;
-                var email = document.getElementById('email').value;
-                var username = document.getElementById('username').value;
-                var password = document.getElementById('password').value;
-                var passwordConfirm = document.getElementById('passwordConfirm').value;
-                var address = document.getElementById('address').value;
-                if (
-                    ((name.length != 0) &&
-                        (surname.length != 0) &&
-                        (email.length != 0) &&
-                        (username.length != 0) &&
-                        (password.length != 0) &&
-                        (passwordConfirm.length != 0) &&
-                        (address.length != 0)
-                    ) && (document.getElementById('equal') == 'yes')) {
-                    document.getElementById(register).disabled = false;
-                } else {
-                    document.getElementById('require').innerHTML = `Please, fill all required fields`;
-                }
-            }
-
+            //password update
+        document.getElementById('passwordR').addEventListener('input', () => {
+            passwordUpdate();
         })
+
+        function emptyChecker() {
+            var name = document.getElementById('name').value;
+            var surname = document.getElementById('surname').value;
+            var email = document.getElementById('emailR').value;
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('passwordR').value;
+            var passwordConfirm = document.getElementById('passwordConfirm').value;
+            var address = document.getElementById('address').value;
+
+            if ((name.length != 0) &&
+                (surname.length != 0) &&
+                (email.length != 0) &&
+                (username.length != 0) &&
+                (password.length != 0) &&
+                (passwordConfirm.length != 0) &&
+                (address.length != 0)) {
+                document.getElementById('require').innerHTML = ``;
+                document.getElementById('fill').value = 'yes';
+
+            } else {
+                document.getElementById('require').innerHTML = `Please, fill all required fields`;
+                document.getElementById('fill').value = 'no';
+
+            }
+        }
+
+        function passwordVerification() {
+            var verpassword = document.getElementById('passwordConfirm').value;
+            var firstPassword = document.getElementById('passwordR').value;
+            console.log(verpassword);
+            console.log(firstPassword);
+            if (firstPassword == verpassword) {
+                document.getElementById('equal').value = 'yes';
+                document.getElementById('pass').innerHTML = ``;
+
+
+            } else {
+                document.getElementById('pass').innerHTML = `Different Password Introduced`;
+                document.getElementById('equal').value = 'no';
+
+            }
+            var fill = document.getElementById('fill').value;
+            var equal = document.getElementById('equal').value;
+            if (fill == 'yes' && equal == 'yes') {
+                document.getElementById('register').disabled = false;
+            }
+        }
+
+        function passwordUpdate() {
+            var password = document.getElementById('passwordR').value;
+            console.log(password)
+        }
     </script>
 
 </body>
