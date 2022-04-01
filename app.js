@@ -8,8 +8,6 @@ const session = require('express-session');
 const passport = require('passport');
 const ObjectID = require('mongodb').ObjectID;
 const LocalStrategy = require('passport-local');
-const routes = require('./routes');
-const auth = require('./auth.js');
 const passportSocketIo = require('passport.socketio');
 const cookieParser = require('cookie-parser');
 const MongoStore = require('connect-mongo')(session);
@@ -17,7 +15,6 @@ const URI = process.env.MONGO_URI;
 const store = new MongoStore({ url: URI });
 const bcrypt = require('bcrypt');
 const { MongoClient } = require('mongodb');
-
 
 
 const app = express();
@@ -35,13 +32,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(passport.initialize());
-app.use(passport.session());
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
-    cookie: { secure: false }
+    cookie: { secure: false },
+    maxAge: 360*5,
+    store: store,
+    name:'express.sid'
 }));
+app.use(passport.session());
 app.use(passport.authenticate('session'));
 
 io.use(
@@ -57,20 +57,6 @@ io.use(
 
 //Connection with database
 mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true });
-const client = new MongoClient(URI, { useNewUrlParser: true, useUnifiedTopology: true });
-try {
-    // Connect to the MongoDB cluster
-    client.connect();
-
-    // Make the appropriate DB calls
-    callback(client);
-
-} catch (e) {
-    // Catch any errors
-    console.error(e);
-    throw new Error('Unable to Connect to Database')
-}
-const myDataBase = client.db('myFirstDatabase').collection('users');
 
 
 const packageSchema = new mongoose.Schema({
@@ -164,7 +150,6 @@ app.get('/index', ensureAuthenticated, (req, res) => {
                     res.render('index', {
                         'item': item,
                         'result1': result
-
                     })
                 }
             })
@@ -746,14 +731,14 @@ app.get('/map', ensureAuthenticated, (req, res) => {
         }
     }
 })
-
 function ensureAuthenticated(req, res, next) {
-    console.log(req.isAuthenticated)
     if (req.isAuthenticated()) {
         return next();
     }
     res.redirect('/');
 }
+
+
 
 //404
 app.use((req, res, next) => {
@@ -770,15 +755,16 @@ passport.serializeUser((user, done) => {
     done(null, user._id);
 });
 passport.deserializeUser((id, done) => {
-    myDataBase.findOne({ _id: new ObjectID(id) }, (err, user) => {
-        done(null, user);
+    User.findOne({ _id: new ObjectID(id) }, (err, user) => {
+        console.log(user);
+        if(!err) done(null, user);
+        else done(err, null)    
     });
 });
-passport.use(new LocalStrategy(
-    function verify(email, password, done) {
-        console.log(email)
+passport.use(new LocalStrategy(function verify(username, password, done) {
+        console.log(username)
         console.log(password)
-        myDataBase.findOne({ 'email': email }, function(err, user) {
+        User.findOne({ 'email': username }, function(err, user) {
             if (err) { return done(err); }
             if (!user) { return done(null, false); }
             if (!bcrypt.compareSync(password, user.password)) {
@@ -788,6 +774,7 @@ passport.use(new LocalStrategy(
         });
     }
 ));
+
 
 
 
