@@ -16,34 +16,10 @@ const store = new MongoStore({ url: URI });
 const bcrypt = require('bcrypt');
 const { MongoClient } = require('mongodb');
 
-
 const app = express();
 
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser.urlencoded({ extended: true }))
-
-app.use(passport.initialize());
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: true,
-    saveUninitialized: true,
-    cookie: { secure: false },
-    maxAge: 360*5,
-    store: store,
-    name:'express.sid'
-}));
-app.use(passport.session());
-app.use(passport.authenticate('session'));
-
 io.use(
     passportSocketIo.authorize({
         cookieParser: cookieParser,
@@ -54,6 +30,34 @@ io.use(
         fail: onAuthorizeFail
     })
 );
+
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
+    cookie: { secure: false },
+    maxAge: 360 * 5,
+    store: store,
+    name: 'express.sid'
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(passport.authenticate('session'));
+
+
+
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }))
+
+
+
 
 //Connection with database
 mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -120,106 +124,32 @@ const Delivery = mongoose.model('Delivery', deliverySchema);
 //6: Users with name
 //7: Reports
 app.get('/index', ensureAuthenticated, (req, res) => {
-    var item = req.query.item;
-    console.log(item);
-    if (!item) {
-        item = 1;
-    }
-    switch (item) {
-        case 1:
-            Package.find({}, result = (err, result) => {
+    Package.find({}, (err, result) => {
+        if (err) {
+            console.log(err);
+        } else {
+            Delivery.find({}, (err, result1) => {
                 if (err) {
-                    console.log(err);
+                    console.log(err)
                 } else {
-                    console.log(result);
-                    res.render('index', {
-                        'item': item,
-                        'result1': result
+                    User.find({}, (err, result2) => {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            res.render('index', {
+                                'result': result,
+                                'result1': result1,
+                                'result2': result2
+                            })
+                        }
+                    })
+                }
+            })
+        }
+    })
+})
 
-                    })
-                }
-            })
-            break;
-        case 2:
-            response.setHeader("Content-Type", "text/html");
-
-            Delivery.find({}, result = (err, result) => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    res.render('index', {
-                        'item': item,
-                        'result1': result
-                    })
-                }
-            })
-            break;
-        case 3:
-            var itemname = req.body.itemname;
-            Package.find({ name: itemname }, result = (err, result) => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    res.render('index', {
-                        'item': item,
-                        'result1': result
-
-                    })
-                }
-            })
-            break;
-        case 4:
-            var itemname = req.body.itemname;
-            Delivery.find({ name: itemname }, (err, result) => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    res.render('index', {
-                        'item': item,
-                        'result1': result
-
-                    })
-                }
-            })
-            break;
-        case 5:
-            User.find({}, (err, result) => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    res.render('index', {
-                        result: result
-                    })
-                }
-            })
-            break;
-        case 6:
-            var itemname = req.body.itemname;
-            User.find({ name: itemname }, (err, result) => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    res.render('index', {
-                        result: result
-                    })
-                }
-            })
-            break;
-        default:
-            console.log(item);
-            Package.find({},
-                result = (err, result) => {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        res.render('index', {
-                            'item': item,
-                            'result1': result
-
-                        })
-                    }
-                })
-    }
+app.get('/search', ensureAuthenticated, (req, res) => {
 
 })
 
@@ -266,7 +196,7 @@ app.post('/register', (req, res, next) => {
         })
     },
     passport.authenticate('local', { failureRedirect: '/' }),
-    (req, res, next) => {
+    (req, res) => {
         if (req.user.account_type == 1) {
             res.render('index');
         }
@@ -731,6 +661,7 @@ app.get('/map', ensureAuthenticated, (req, res) => {
         }
     }
 })
+
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
@@ -752,28 +683,32 @@ app.use((req, res, next) => {
 
 // Serialization and deserialization here...
 passport.serializeUser((user, done) => {
+    console.log(user._id)
     done(null, user._id);
 });
 passport.deserializeUser((id, done) => {
     User.findOne({ _id: new ObjectID(id) }, (err, user) => {
         console.log(user);
-        if(!err) done(null, user);
-        else done(err, null)    
+        if (err) {
+            console.log(err);
+            done(err, null);
+        } else {
+            done(null, user)
+        }
     });
 });
 passport.use(new LocalStrategy(function verify(username, password, done) {
-        console.log(username)
-        console.log(password)
-        User.findOne({ 'email': username }, function(err, user) {
-            if (err) { return done(err); }
-            if (!user) { return done(null, false); }
-            if (!bcrypt.compareSync(password, user.password)) {
-                return done(null, false);
-            }
-            return done(null, user);
-        });
-    }
-));
+    console.log(username)
+    console.log(password)
+    User.findOne({ 'email': username }, function(err, user) {
+        if (err) { return done(err); }
+        if (!user) { return done(null, false); }
+        if (!bcrypt.compareSync(password, user.password)) {
+            return done(null, false);
+        }
+        return done(null, user);
+    });
+}));
 
 
 
