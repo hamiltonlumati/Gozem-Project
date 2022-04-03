@@ -15,11 +15,31 @@ const URI = process.env.MONGO_URI;
 const store = new MongoStore({ url: URI });
 const bcrypt = require('bcrypt');
 const { MongoClient } = require('mongodb');
-
+const logger = require('morgan');
+var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn
+const ejsLint = require('ejs-lint');
 const app = express();
 
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
+
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
+    cookie: { secure: false },
+    maxAge: 360 * 5,
+    store: store,
+    name: 'express.sid'
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 io.use(
     passportSocketIo.authorize({
         cookieParser: cookieParser,
@@ -32,29 +52,11 @@ io.use(
 );
 
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: true,
-    saveUninitialized: true,
-    cookie: { secure: false },
-    maxAge: 360 * 5,
-    store: store,
-    name: 'express.sid'
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(passport.authenticate('session'));
-
-
-
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }))
+
+
 
 
 
@@ -123,7 +125,7 @@ const Delivery = mongoose.model('Delivery', deliverySchema);
 //5:Users
 //6: Users with name
 //7: Reports
-app.get('/index', ensureAuthenticated, (req, res) => {
+app.get('/index', ensureLoggedIn('/'), (req, res) => {
     Package.find({}, (err, result1) => {
         if (err) {
             console.log(err);
@@ -156,7 +158,7 @@ app.get('/index', ensureAuthenticated, (req, res) => {
     });
 })
 
-app.get('/search', ensureAuthenticated, (req, res) => {
+app.get('/search', ensureLoggedIn('/'), (req, res) => {
     item = req.query.item;
     if (item == 1) {
         Package.find({ name: item }, (err, result) => {
@@ -230,7 +232,6 @@ app.post('/login', passport.authenticate('local', { failureRedirect: '/' }), (re
     res.redirect('/dashboard');
 });
 
-
 //Register
 app.post('/register', (req, res, next) => {
         const password = req.body.password;
@@ -266,38 +267,37 @@ app.post('/register', (req, res, next) => {
     passport.authenticate('local', { failureRedirect: '/' }),
     (req, res) => {
         if (req.user.account_type == 1) {
-            res.render('index');
+            res.redirect('index');
         }
         if (req.user.account_type == 2) {
-            res.render('web_driver');
+            res.redirect('/web_driver');
         }
         if (req.user.account_type == 3) {
-            res.render('web_tracker');
+            res.redirect('/web_tracker');
         }
 
     }
 );
 
 //Unauthenticate
-app.route('/logout')
-    .get((req, res) => {
-        req.logout();
-        res.redirect('/');
-    });
+app.get('/logout', (req, res) => {
+    req.logout();
+    res.redirect('/');
+});
 
-app.get('/dashboard', ensureAuthenticated, (req, res) => {
+app.get('/dashboard', ensureLoggedIn('/'), (req, res) => {
     if (req.user.account_type == 1) {
-        res.render('index');
+        res.redirect('/index');
     }
     if (req.user.account_type == 2) {
-        res.render('web_driver');
+        res.redirect('/web_driver');
     }
     if (req.user.account_type == 1) {
-        res.render('web_tracker');
+        res.redirect('/web_tracker');
     }
 
 });
-app.get('/add', ensureAuthenticated, (req, res) => {
+app.get('/add', ensureLoggedIn('/'), (req, res) => {
     Package.find({}, (err, result) => {
         if (err) {
             console.log(err);
@@ -310,7 +310,7 @@ app.get('/add', ensureAuthenticated, (req, res) => {
     })
 })
 
-app.get('/api/package/:id', ensureAuthenticated, (req, res) => {
+app.get('/api/package/:id', ensureLoggedIn('/'), (req, res) => {
     if (req.query.delete = 1) {
         let id = req.query.id;
         Package.deleteOne({ _id: id }, (err, result) => {
@@ -321,7 +321,7 @@ app.get('/api/package/:id', ensureAuthenticated, (req, res) => {
     }
 });
 
-app.post('/api/package/', ensureAuthenticated, (req, res) => {
+app.post('/api/package/', ensureLoggedIn('/'), (req, res) => {
     let packreq = req.body;
     if (req.user.account_type == 1) {
         User.find({ email: email }, (err, result) => {
@@ -373,7 +373,7 @@ app.post('/api/package/', ensureAuthenticated, (req, res) => {
 
 });
 
-app.get('/package/update', ensureAuthenticated, (req, res) => {
+app.get('/package/update', ensureLoggedIn('/'), (req, res) => {
     let packUpdate = 1;
     let packID = req.query.id;
     Package.findById(packID, (err, result) => {
@@ -388,7 +388,7 @@ app.get('/package/update', ensureAuthenticated, (req, res) => {
     })
 })
 
-app.put('/api/package/', ensureAuthenticated, (req, res) => {
+app.put('/api/package/', ensureLoggedIn('/'), (req, res) => {
     let putParams = req.params;
     Package.findById(putParams.id, (err, result) => {
         if (err) {
@@ -428,13 +428,13 @@ app.put('/api/package/', ensureAuthenticated, (req, res) => {
                 result.weight = putParams.weight
             }
             result.save((err, resultSaved) => {
-                res.render('/dashboard')
+                res.redirect('/dashboard')
             });
         }
     })
 });
 
-app.delete('/api/package/:id', ensureAuthenticated, (req, res) => {
+app.delete('/api/package/:id', ensureLoggedIn('/'), (req, res) => {
     let id = req.query.id;
     Package.deleteOne({ _id: id }, (err, result) => {
         if (err) {
@@ -454,7 +454,7 @@ app.delete('/api/package/:id', ensureAuthenticated, (req, res) => {
 //7: Reports
 //8: Incomming Deliveries
 
-app.get('/web_driver', ensureAuthenticated, (req, res) => {
+app.get('/web_driver', ensureLoggedIn('/'), (req, res) => {
     var item = req.query.item;
     switch (item) {
         case 2:
@@ -500,7 +500,7 @@ app.get('/web_driver', ensureAuthenticated, (req, res) => {
     });
 })
 
-app.get('/web_tracker', ensureAuthenticated, (req, res) => {
+app.get('/web_tracker', ensureLoggedIn('/'), (req, res) => {
     var item = req.query.item;
     switch (item) {
         case 3:
@@ -544,7 +544,7 @@ app.get('/web_tracker', ensureAuthenticated, (req, res) => {
         })
     }
 });
-app.get('/map', ensureAuthenticated, (req, res) => {
+app.get('/map', ensureLoggedIn('/'), (req, res) => {
     if (req.user.account_type == 2) {
         if (req.query.package) {
             Package.find({ name: req.query.package }, (err, result) => {
@@ -598,12 +598,7 @@ app.get('/map', ensureAuthenticated, (req, res) => {
     }
 })
 
-function ensureAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect('/');
-}
+
 
 
 
@@ -711,8 +706,6 @@ function onAuthorizeFail(data, message, error, accept) {
     console.log('failed connection to socket.io:', message);
     accept(null, false);
 }
-
-
 const port = process.env.PORT || 3000;
 http.listen(port, (err) => {
     if (err) {
