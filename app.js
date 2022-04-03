@@ -64,7 +64,7 @@ mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 const packageSchema = new mongoose.Schema({
-    delivery_id: { type: String, required: true },
+    delivery_id: { type: String },
     description: { type: String, required: true },
     name: { type: String, required: true },
     weight: { type: Number, required: true },
@@ -124,34 +124,102 @@ const Delivery = mongoose.model('Delivery', deliverySchema);
 //6: Users with name
 //7: Reports
 app.get('/index', ensureAuthenticated, (req, res) => {
-    Package.find({}, (err, result) => {
+    Package.find({}, (err, result1) => {
         if (err) {
             console.log(err);
         } else {
-            Delivery.find({}, (err, result1) => {
+            Delivery.find({}, (err, result2) => {
                 if (err) {
                     console.log(err)
                 } else {
-                    User.find({}, (err, result2) => {
+                    User.find({ account_type: 2 }, (err, result3) => {
                         if (err) {
                             console.log(err);
                         } else {
-                            res.render('index', {
-                                'result': result,
-                                'result1': result1,
-                                'result2': result2
+                            User.find({ account_type: 3 }, (err, result4) => {
+                                if (err) {
+                                    console.log(err);
+                                } else {
+                                    res.render('index', {
+                                        'result1': result1,
+                                        'result2': result2,
+                                        'result3': result3,
+                                        'result4': result4,
+                                    })
+                                }
                             })
                         }
                     })
                 }
-            })
+            });
         }
-    })
+    });
 })
 
 app.get('/search', ensureAuthenticated, (req, res) => {
-
+    item = req.query.item;
+    if (item == 1) {
+        Package.find({ name: item }, (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.render('result', {
+                    'item': 'Packages',
+                    'result': result
+                })
+            }
+        })
+    }
+    if (item == 2) {
+        Delivery.find({ name: item, status: 'Open' }, (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.render('result', {
+                    'result': result
+                })
+            }
+        })
+    }
+    if (item == 3) {
+        Delivery.find({ name: item, status: 'Delivered' }, (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.render('result', {
+                    'result': result,
+                    'item': 'Delivered Deliveries'
+                })
+            }
+        })
+    }
+    if (item == 4) {
+        User.find({ account_type: 2 }, (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.render('result', {
+                    'result': result,
+                    item: 'Drivers'
+                })
+            }
+        })
+    }
+    if (item == 5) {
+        User.find({ account_type: 3 }, (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.render('result', {
+                    'result': result,
+                    item: 'Clients'
+                })
+            }
+        })
+    }
 })
+
+app.get('/')
 
 app.get('/', (req, res) => {
     res.render('login');
@@ -230,14 +298,6 @@ app.get('/dashboard', ensureAuthenticated, (req, res) => {
 
 });
 app.get('/add', ensureAuthenticated, (req, res) => {
-    let pack = req.query.pack;
-    let delivery = req.query.delivery;
-    if (pack) {
-        pack = 1
-    }
-    if (delivery) {
-        delivery = 1
-    }
     Package.find({}, (err, result) => {
         if (err) {
             console.log(err);
@@ -258,15 +318,6 @@ app.get('/api/package/:id', ensureAuthenticated, (req, res) => {
                 console.log(err);
             }
         })
-    } else {
-        let id = req.query.id;
-        Package.findById(id, (err, result) => {
-            if (err) {
-                console.log(err);
-            } else {
-                res.json(result)
-            }
-        })
     }
 });
 
@@ -277,7 +328,7 @@ app.post('/api/package/', ensureAuthenticated, (req, res) => {
             if (err) {
                 console.log(err)
             } else {
-                let pack = new Package({
+                var pack = new Package({
                     description: packreq.description,
                     from_name: packreq.from_name,
                     from_address: packreq.from_address,
@@ -296,7 +347,7 @@ app.post('/api/package/', ensureAuthenticated, (req, res) => {
             }
         })
     } else {
-        let pack = new Package({
+        var pack = new Package({
             description: packreq.description,
             from_name: packreq.from_name,
             from_address: packreq.from_address,
@@ -377,7 +428,7 @@ app.put('/api/package/', ensureAuthenticated, (req, res) => {
                 result.weight = putParams.weight
             }
             result.save((err, resultSaved) => {
-                res.json(resultSaved)
+                res.render('/dashboard')
             });
         }
     })
@@ -393,117 +444,6 @@ app.delete('/api/package/:id', ensureAuthenticated, (req, res) => {
         }
     })
 });
-
-app.get('/add_delivery', ensureAuthenticated, (req, res) => {
-    var status = req.body.status;
-    if (status)
-        res.render('delivery_add')
-})
-
-
-app.get('/api/delivery', ensureAuthenticated, (req, res) => {
-    let id = req.query.id;
-    if (req.query.delete == 1) {
-        Delivery.deleteOne({ _id: id }, (err, result) => {
-            if (err) {
-                console.log(err);
-            } else {
-                res.redirect('/dashboard');
-            }
-        })
-    } else {
-        Delivery.findById(id, (err, result) => {
-            if (err) {
-                console.log(err);
-            } else {
-                res.json(result);
-            }
-        })
-    }
-
-});
-
-app.post('/api/delivery/:id', ensureAuthenticated, (req, res) => {
-    let delreq = req.body;
-    let delivery = new Delivery({
-        package_id: delreq.package_id,
-        pick_up: delreq.pick_up,
-        start_time: delreq.start_time,
-        end_time: delreq.end_time,
-        location: delreq.location,
-        status: delreq.status
-    });
-    delivery.save((err, result) => {
-        if (err) {
-            console.log(err);
-        } else {
-            res.json(result)
-        }
-    })
-
-});
-app.get('/delivery/update', ensureAuthenticated, (req, res) => {
-    let delUpdate = 1;
-    let delID = req.query.id;
-    Package.findById(delID, (err, result) => {
-        if (err) {
-            console.log(err);
-        } else {
-            res.render('update', {
-                result: result,
-                delivery: delUpdate
-            })
-        }
-    })
-})
-
-app.put('/api/delivery/:id', ensureAuthenticated, (req, res) => {
-    let putParams = req.params;
-    Delivery.findById(putParams.id, (err, result) => {
-        if (err) {
-            console.log(err);
-        } else {
-            if (result.package_id !== putParams.package_id) {
-                result.package_id = putParams.package_id;
-            }
-            if (result.pick_up !== putParams.pick_up) {
-                result.pick_up = putParams.pick_up;
-            }
-            if (result.start_time !== putParams.start_time) {
-                result.start_time = putParams.start_time;
-            }
-            if (result.end_time !== putParams.end_time) {
-                result.end_time = putParams.end_time;
-            }
-            if (result.location !== putParams.location) {
-                result.location = putParams.location;
-            }
-            if (result.status !== putParams.status) {
-                result.status = putParams.status;
-            }
-            result.save((err, resultEdited) => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    res.json(resultEdited)
-                }
-            })
-
-        }
-    });
-})
-
-app.delete('/api/delivery/:id', ensureAuthenticated, (req, res) => {
-    let id = req.id;
-    Delivery.deleteOne({ _id: id }, (err, result) => {
-        if (err) {
-            console.log(err);
-        } else {
-            res.json(result);
-        }
-    })
-})
-
 
 //1: package 
 //2: delivery, 
@@ -571,7 +511,6 @@ app.get('/web_tracker', ensureAuthenticated, (req, res) => {
                     res.render('web_tracker', {
                         result: result,
                     });
-
                 }
             })
             break;
@@ -592,11 +531,8 @@ app.get('/web_tracker', ensureAuthenticated, (req, res) => {
                     })
                 }
             })
-
     }
-    if (item == 3) {
-
-    } else {
+    if (item == 3) {} else {
         Package.find({ username: req.user.username }, (err, result) => {
             if (err) {
                 console.log(err);
