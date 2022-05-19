@@ -1,5 +1,9 @@
 /* LOGIN */
 
+* {
+    font-family: 'Lato', sans-serif;
+}
+
 body {
     padding: 0px;
 }
@@ -52,21 +56,138 @@ body .login-right .group .row {
 }
 
 
+/* Dashboard */
+
+body {
+    padding: 0px;
+    background-color: #e5d4ce;
+}
+
+body .header {
+    background-color: #de6e4b;
+    color: white;
+}
+
+body .header a {
+    color: white;
+    text-decoration: none;
+}
+
+
 /* ADMIN DASHBOARD */
 
-.lateral,
-.lat {
-    display: inline;
-    margin-top: 5px;
+body .header .gozem {
+    display: inline-block;
+    width: 20%;
+    padding: 15px 15px;
+    font-size: large;
+    font-weight: bold;
+}
+
+body .header form {
+    text-align: right;
+    display: inline-block;
+    width: 78%;
+}
+
+body .menu {
+    text-align: center;
+    display: block;
+    background-color: #7fd1b9;
+}
+
+body .menu li {
+    display: inline-block;
+    padding: 0px 15px;
+}
+
+body .menu li:hover {
+    cursor: pointer;
+}
+
+body .menu .packages {
+    border-bottom-style: solid;
+}
+
+body .packages-block,
+body .deliveries-block,
+body .drivers-block,
+body .users-block,
+body .register-block,
+body .createPackage-block {
+    height: 512px;
+    text-align: center;
+    padding: 5px 25px;
+}
+
+body .packages-block table,
+body .deliveries-block table,
+body .drivers-block table,
+body .users-block table,
+body .register-block form,
+body .createPackage-block form {
+    margin: auto;
+    padding: 5px;
+}
+
+body .register-block form div,
+body .createPackage-block form div {
+    margin-top: 10px;
+}
+
+body .packages-block table,
+body .deliveries-block table,
+body .drivers-block table,
+body .users-block table {
+    width: 75%;
+}
+
+body .deliveries-block {
+    display: none;
+}
+
+body .drivers-block {
+    display: none;
+}
+
+body .users-block {
+    display: none;
+}
+
+body .register-block {
+    display: none;
+}
+
+body .createPackage-block {
+    display: none;
 }
 
 button {
     background-color: #BA3F1D;
     border-style: none;
-    border-radius: 20px;
+    border-radius: 5px;
+    width: 100px;
+}
+
+input {
+    height: 25px;
+}
+
+label {
+    text-align: left;
+    display: inline-block;
     width: 100px;
 }
 
 table tr {
     height: 40px;
+}
+
+body .frame-block {
+    display: none;
+}
+
+body .footer {
+    text-align: center;
+    background-color: #de6e4b;
 }

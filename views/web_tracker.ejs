@@ -8,164 +8,244 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/stylesheets/style.css">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
 
     <title>Gozem - Web Tracker</title>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">Gozem</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auAddressee mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/web_tracker">Web Tracker</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/web_driver">Web Driver</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+    <nav class="header">
+        <a href="/dashboard" class="gozem">Gozem</a>
+        <form class="lateral" action="/" method="GET">
+            <input class="lat" type="text" name="itemname" placeholder="Introduce items name">
+            <select class="lat" name="item">
+                <option value="1" selected>Packages</option>
+                <option value="2">Deliveries</option>
+                <option value="3">Drivers</option>
+                <option value="4">Clients</option>
+            </select>
+            <button class="lat" type="submit" name="submit">Search</button>
+            <span><a href="/logout">Log Out</a></span>
+        </form>
     </nav>
-    <div class="container p-3">
-        <div class="row mb-4">
-            <form action="/api/package/:id" method="GET" class="input-group">
-                <input type="email" class="form-control" name="packageID" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter package ID" name="id">
-                <button class="btn btn-primary mt-3 mt-0" type="submit" name="searchPackage">Track</button>
-            </form>
-        </div>
+    <ul class="menu">
+        <li class="packages" id="packages">Your Packages</li>
+        <li class="deliveries" id="deliveries">Pending Deliveries</li>
+        <li class="createPackage" id="createPackage">Create a Package</li>
+        <li></li>
+    </ul>
 
-        <div class="row">
-            <div class="col">
-                <% if(packageResult!==0){ %>
-                    <div class="row">
-                        <div class="card" style="width: 18rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">Package Details</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">Description:</h6>
-                                <p class="card-text">
-                                    <%= packageResult.description %>
-                                </p>
-                                <p>
-                                    <nav>Weight:</nav>
-                                    <%= packageResult.weight%>
-                                </p>
-                                <p>
-                                    <nav>Width:</nav>
-                                    <%= packageResult.width%>
-                                </p>
-                                <p>
-                                    <nav>Heigth:</nav>
-                                    <%= packageResult.height%>
-                                </p>
-                                <p>
-                                    <nav>Depth:</nav>
-                                    <%= packageResult.depth%>
-                                </p>
-                                <p>
-                                    <nav>Sender name:</nav>
-                                    <%= packageResult.from_name%>
-                                </p>
-                                <p>
-                                    <nav>Sender Address:</nav>
-                                    <%= packageResult.from_address%>
-                                </p>
-                                <p>
-                                    <nav>Sender Location:</nav>
-                                    <%= packageResult.from_location%>
-                                </p>
-                                <p>
-                                    <nav>Addressee Name:</nav>
-                                    <%= packageResult.to_name%>
-                                </p>
-                                <p>
-                                    <nav>Addressee Address:</nav>
-                                    <%= packageResult.to_address%>
-                                </p>
-                                <p>
-                                    <nav>Addressee Location:</nav>
-                                    <%= packageResult.to_location%>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <% } %>
-                        <% if(deliveryResult!==0){ %>
-                            <div class="row">
-
-                                <div class="card" style="width: 18rem;">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Delivery Details</h5>
-                                        <p>
-                                            <nav>Package ID:</nav>
-                                            <%= deliveryResult.package%>
-                                        </p>
-                                        <p>
-                                            <nav>Pick Up:</nav>
-                                            <%= deliveryResult.pick_up%>
-                                        </p>
-                                        <p>
-                                            <nav>Start Time:</nav>
-                                            <%= deliveryResult.start_time%>
-                                        </p>
-                                        <p>
-                                            <nav>End Time</nav>
-                                            <%= deliveryResult.end_time%>
-                                        </p>
-                                        <p>
-                                            <nav>Location</nav>
-                                            <%= deliveryResult.location%>
-                                        </p>
-                                        <p>
-                                            <nav>Status:</nav>
-                                            <%= deliveryResult.status%>
-                                        </p>
-                                    </div>
-                                </div>/p>
-                                <% } %>
-                            </div>
-                            <div class="col">
-                                <div class="ratio ratio-16x9">
-                                    <div class="mapouter">
-                                        <div class="gmap_canvas"><iframe width="600" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q=2880%20Broadway,%20New%20York&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
-                                                allowfullscreen></iframe>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
+    <div class="packages-block" id="packages-block">
+        <% if(result1.length!=0){ %>
+            <h3>Packages</h3>
+            <table>
+                <tr>
+                    <th>Package Name</th>
+                    <th>Description</th>
+                    <th>Package</th>
+                    <th>Sender</th>
+                    <th>Receiver</th>
+                    <th>Operations</th>
+                </tr>
+                <% for (const [key, result] of Object.entries(result1)){ %>
+                    <tr>
+                        <td>
+                            <%= result.name %>
+                        </td>
+                        <td>
+                            <%-result.description %>
+                        </td>
+                        <td>
+                            <select>
+                                <option selected>Package</option>
+                                <option value="">Weight: <%= result.weight %> </option>
+                                <option value="">Width: <%= result.width %> </option>
+                                <option value="">Height: <%= result.height %> </option>
+                                <option value="">Depth: <%= result.depth %> </option>
+                            </select>
+                        </td>
+                        <td>
+                            <select>
+                                <option selected>Sender</option>
+                                <option value="">Name: <%= result.from_name %> </option>
+                                <option value="">Adreess: <%- result.from_address %> </option>
+                                <option value="">Location: <%= result.from_location %> </option>
+                            </select>
+                        </td>
+                        <td>
+                            <select>
+                                <option>Receiver</option>
+                                <option value="">Name: <%= result.to_name %> </option>
+                                <option value="">Adreess: <%- result.to_address %> </option>
+                                <option value="">Location: <%= result.to_location %> </option>
+                            </select>
+                        </td>
+                        <td>
+                            <form action="/api/delete" method="GET" class="col">
+                                <button class="" value="1" type="submit" name="delete"><i class="bi bi-trash-fill"></i></button>
+                                <input type="hidden" name="id" value="<%= result._id %> ">
+                            </form>
+                        </td>
+                        <td>
+                            <form action="/package/update" method="GET" class="col">
+                                <button value="1" class="" type="submit" name="update"><i class="bi bi-arrow-clockwise"></i></button>
+                                <input type="hidden" name="id" value="<%= result._id %> ">
+                            </form>
+                        </td>
+                    </tr>
+                    <% }%>
+            </table>
+            <% }else{ %>
+                <p>There are no packages</p>
+                <% } %>
+    </div>
+    <div class="deliveries-block" id="deliveries-block">
+        <% if(result2.length!=0){ %>
+            <h3>Deliveries</h3>
+            <table>
+                <tr>
+                    <th>Delivery Name</th>
+                    <th>Times</th>
+                    <th>Status</th>
+                    <th>Time to deliver</th>
+                </tr>
+                <% for (const [key, result] of Object.entries(result2)){ %>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <select name="" id="">
+                                        <option value="">Pick Up: <%= result.pick_up %> </option>
+                                        <option value="start_time">Start Time: <%= result.start_time %> </option>
+                                        <option value="">End Time: <%= result.end_time %> </option>
+                                    </select>
+                        </td>
+                        <td>
+                            <%= result.status %>
+                        </td>
+                        <td><button id="<%= result.name%> ">Map</button></td>
+                    </tr>
+                    <% }%>
+            </table>
+            <% }else{%>
+                <p>There are no deliveries.</p>
+                <% } %>
+    </div>
+    <div class="createPackage-block" id="createPackage-block">
+        <h3>Package Creation</h3>
+        <form method="POST" action="/api/package/">
+            <h6>Package characteristics</h6>
+            <div>
+                <label for="name">Name</label>
+                <input type="text" name="name" id="name" placeholder="Insert the package name">
             </div>
-        </div>
+            <div>
+                <label for="description">Description</label>
+                <input type="text" name="description" id="description" placeholder="Insert the description of the package">
+            </div>
+            <div>
+                <label for="weight">Weight</label>
+                <input type="text" name="weight" id="weight">
+            </div>
+            <div>
+                <label for="width">Width</label>
+                <input type="text" name="width" id="width">
+            </div>
+            <div>
+                <label for="height">Height</label>
+                <input type="text" name="height" id="height">
+            </div>
+            <div>
+                <label for="depth">Depth</label>
+                <input type="text" name="depth" id="depth">
+            </div>
+            <h6>Sender and receiver</h6>
+            <div>
+                <label for="from_name">Sender Username</label>
+                <input type="text" name="from_name" id="from_name" placeholder="Insert sender Username">
+            </div>
+            <div>
+                <label for="to_name">Receiver Username</label>
+                <input type="text" name="to_name" id="to_name" placeholder="Insert Receiver Username">
+            </div>
+            <div>
+                <button type="submit" name="savePack">Save Package</button>
+            </div>
+        </form>
+    </div>
+    <div id="frame-block" class="frame-block">
+        <iframe id="frame" width="600" height="450" style="border:0" loading="lazy" allowfullscreen></iframe>
+    </div>
+    <nav class="footer">Gozem, All Rights Reserved, 2022</nav>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+    </script>
+    <script>
+        document.getElementById('packages').addEventListener('click', () => {
+            document.getElementById('packages').style.borderBottomStyle = "solid";
+            document.getElementById('deliveries').style.borderBottomStyle = "none";
+            document.getElementById('createPackage').style.borderBottomStyle = "none";
+            document.getElementById('packages-block').style.display = "block";
+            document.getElementById('createPackage-block').style.display = "none";
+            document.getElementById('deliveries-block').style.display = "none";
+
+        })
+        document.getElementById('deliveries').addEventListener('click', () => {
+            document.getElementById('deliveries').style.borderBottomStyle = "solid";
+            document.getElementById('packages').style.borderBottomStyle = "none";
+            document.getElementById('createPackage').style.borderBottomStyle = "none";
+            document.getElementById('deliveries-block').style.display = "block";
+            document.getElementById('packages-block').style.display = "none";
+            document.getElementById('createPackage-block').style.display = "none";
+
+        })
+        document.getElementById('createPackage').addEventListener('click', () => {
+            document.getElementById('createPackage').style.borderBottomStyle = "solid";
+            document.getElementById('deliveries').style.borderBottomStyle = "none";
+            document.getElementById('packages').style.borderBottomStyle = "none";
+            document.getElementById('createPackage-block').style.display = "block";
+            document.getElementById('packages-block').style.display = "none";
+            document.getElementById('deliveries-block').style.display = "none";
+
+        })
+    </script>
+    <% for (const [key, result] of Object.entries(result2)){ %>
         <script>
-            const socket = new WebSocket("ws://localhost:3000");
+            function WS() {
+                socket.emit('webTracker', result.name)
+            }
 
-            socket.addEventListener("open", () => {
-                // send a message Addressee the server
-                socket.send(JSON.stringify({
-                    type: "hello Sender client",
-                    content: [3, "4"]
-                }));
-            });
-
-            // receive a message Sender the server
-            socket.addEventListener("message", ({
-                data
-            }) => {
-                const packet = JSON.parse(data);
-
-                switch (packet.type) {
-                    case "hello Sender server":
-                        // ...
-                        break;
+            let frameBlock = document.getElementById('frame-block').style
+            document.getElementById('<%=result.name%>').addEventListener('click', () => {
+                document.getElementById('frame').src = 'https://www.google.com/maps/embed/v1/directions?origin=Luanda&destination=<%= result.to_address %>&key=AIzaSyDa46O_es5iiRZszl4qtfXJcikAe7FDLaM'
+                frameBlock.display = 'block';
+                frameBlock.position = 'absolute'
+                frameBlock.margin = 'auto';
+                frameBlock.top = '100px';
+            })
+            if (frameBlock.display == 'block') {
+                WS();
+                setInterval(function() {
+                    WS()
+                }, 30000)
+            }
+            socket.on('webTrackerResponse', (data) => {
+                if (data.status == 'Open') {
+                    document.getElementById('frame').src = `https://www.google.com/maps/embed/v1/directions?origin=${data.address}&destination=<%= result.to_address %>&key=AIzaSyDa46O_es5iiRZszl4qtfXJcikAe7FDLaM`
                 }
-            });
+                if (data.status == 'Picked-up') {
+                    document.getElementById('frame').src = `https://www.google.com/maps/embed/v1/directions?origin=${data.latitude},${datalongitude}&destination=<%= result.to_address %>&key=AIzaSyDa46O_es5iiRZszl4qtfXJcikAe7FDLaM`
+                }
+                if (status == 'Delivered') {
+                    document.getElementById('frame').src = `https://www.google.com/maps/embed/v1/directions?origin=<%= result.to_address %>&destination=<%= result.to_address %>&key=AIzaSyDa46O_es5iiRZszl4qtfXJcikAe7FDLaM`
+                }
+            })
         </script>
+        <% } %>
 </body>
 
 </html>

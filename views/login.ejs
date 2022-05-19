@@ -7,7 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-signin-client_id" content="63293722215-rpoaqktpbi8j9f2ctoqrkp22q3mqqlko.apps.googleusercontent.com">
     <link rel="stylesheet" href="/stylesheets/style.css">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
     <title>Gozem - Login</title>
 </head>
 
@@ -17,14 +19,14 @@
     </div>
     <div class="login-right">
         <div class="title">
-            <h1>Gozem - Login</h1>
+            <h1>Gozem</h1>
             <h2>Whatever, Wherever... We</h2>
         </div>
         <div class="group">
 
             <div class="row">
                 <form action="/login" method="POST">
-                    <p>Login</p>
+                    <h3>Login</h3>
                     <div>
                         <label for="#email">Email*</label>
                         <input id="email" type="email" placeholder="Introduce your email" name="username" required>
@@ -37,6 +39,7 @@
                 </form>
             </div>
             <div class="row">
+                <h3>Register</h3>
                 <div id="require">
                     <% if(typeof error !== 'undefined'){ %>
                         <% } %>
@@ -46,13 +49,13 @@
                     <input type="hidden" name="location" id="location">
                     <div>
                         <label for="#email">Email</label>
-                        <input type="email" name="email" id="emailR" placeholder="Introduce your email*" required></div>
+                        <input type="email" name="username" id="emailR" placeholder="Introduce your email*" required></div>
                     <div><label for="#name">First Name</label>
                         <input type="text" name="name" id="name" placeholder="Introduce your first name*"></div>
                     <div><label for="#surname">Surname</label>
                         <input type="text" name="surname" name="surname" id="surname" placeholder="Introduce your surname*" required></div>
                     <div><label for="username">Username</label>
-                        <input type="text" name="username" id="username">
+                        <input type="text" name="email" id="username">
                         <p id="userst"></p>
                     </div>
                     <div>
@@ -76,27 +79,10 @@
                     <input type="hidden" name="equal" value="no" id="equal">
                     <button id="register" type="submit" disabled>Register</button>
                 </form>
+                <a class="button google" href="/login/federated/google">Sign in with Google</a>
             </div>
         </div>
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     <!-- JAVASCRIPT -->
 
