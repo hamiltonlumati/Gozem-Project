@@ -191,3 +191,9 @@ body .footer {
     text-align: center;
     background-color: #de6e4b;
 }
+
+#goofleMap{
+    width: 80%;
+    height: 400px;
+    margin: 20px auto;
+}
